@@ -1,8 +1,44 @@
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Hello World!</title>
+<script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.3.1/js/bootstrap.min.js}"></script>
+<link rel='stylesheet' type="text/css" th:href='@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}'>
+<link rel='stylesheet' type="text/css" th:href='@{/webjars/font-awesome/5.4.1/css/all.min.css}'>
+<link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
 </head>
 <body>
-	<h1>Extrack</h1>
-	<p>Under construction</p>
+	<!-- Image and text -->
+	<header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
+		<a class="navbar-brand  mr-0 mr-md-2 text-white" aria-label="Extrack"> 
+		</a>
+		
+		<div class="navbar-nav-scroll">
+			<ul class="navbar-nav bd-navbar-nav flex-row">
+				<li class="nav-item active"><a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a></li>
+				<li class="nav-item"><a class="nav-link" href="#">Data</a></li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" 
+						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
+					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+						<a class="dropdown-item" href="#">Setting 1</a> 
+						<a class="dropdown-item" href="#">Setting 2</a> 
+						<a class="dropdown-item" href="#">Setting 3</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</header>
+
+	<div class="container-fluid">
+		<div class="row m-0 mt-4">
+			<div class="col-12">
+				<img th:src="@{/img/under-construction.png}" class="img-fluid mx-auto d-block" alt="Under construction">
+			</div>
+		</div>
+	</div>
+
+<script>
+</script>
 </body>
+</html>

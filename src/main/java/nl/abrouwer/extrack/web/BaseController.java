@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/")
 public class BaseController
 {
-	@GetMapping(value = "**")
+	@GetMapping(value = "")
 	public String underConstruction()
 	{
 		return "index";

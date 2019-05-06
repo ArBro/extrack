@@ -1,0 +1,8 @@
+.nav-item.active
+{
+	font-weight: bold;
+}
+.navbar-toggler
+{
+	border: none;
+}
