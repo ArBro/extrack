@@ -1,16 +1,9 @@
 package nl.abrouwer.extrack.web;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-@Controller
-@RequestMapping("/")
-public class BaseController
+public abstract class BaseController
 {
-	@GetMapping(value = "")
-	public String underConstruction()
-	{
-		return "index";
-	}
+	protected Logger log = LoggerFactory.getLogger(getClass());
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="nl" xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragment/layout :: header" />
+<title>Extrack - Inloggen</title>
+</head>
+<body>
+	<div class="container h-100">
+		<div class="row align-items-center h-100">
+			<div class="col-9 mx-auto">
+				<div class="card text-center">
+					<div class="card-header">
+						<h4>Inloggen bij Extrack</h4>
+					</div>
+					
+					<div class="card-body">
+						<form id="loginForm" class="" th:action="@{/login}" method="post">
+							<div th:if="${param.error}" class="alert alert-danger">
+								<i class="fas fa-exclamation-circle mr-1"></i>Gebruikersnaam of wachtwoord incorrect of de gebruiker is inactief.
+							</div>
+							<div class="form-row">
+								<div class="col-md-12">
+									<div class="position-relative form-group">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="fas fa-user"></i></span>
+											</div>
+											<input name="username" id="username" type="text" class="form-control" autofocus>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12">
+									<div class="position-relative form-group">
+										<div class="input-group">
+											<div class="input-group-prepend">
+												<span class="input-group-text"><i class="fas fa-lock"></i></span>
+											</div>
+											<input name="password" id="password" type="password" class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-12 text-left">
+									<div class="position-relative form-check">
+										<input name="_spring_security_remember_me" id="_spring_security_remember_me" type="checkbox" class="form-check-input" value="1">
+										<label for="_spring_security_remember_me" class="form-check-label">Blijf ingelogd</label>
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+
+					<div class="card-footer">
+						<button type="submit" form="loginForm" class="btn btn-primary" onclick="!this.form&&$('#'+$(this).attr('form')).submit()">Inloggen</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- <th:block th:replace="fragment/layout :: footer"/> -->
+</body>
+</html>
