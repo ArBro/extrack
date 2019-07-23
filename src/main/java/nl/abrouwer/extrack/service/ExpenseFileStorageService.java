@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -21,14 +22,10 @@ public class ExpenseFileStorageService implements StorageService
 {
 	private final Path rootLocation;
 
-	// private final StorageProperties properties;
-
-
-	public ExpenseFileStorageService()
+	public ExpenseFileStorageService(@Value("${storage.upload.dir") String uploadDir)
 	{
-		this.rootLocation = Paths.get("/tmp/extrack");
+		this.rootLocation = Paths.get(uploadDir);
 	}
-
 
 	@Override
 	public void store(MultipartFile file)
