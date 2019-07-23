@@ -4,32 +4,39 @@
 <title>Extrack</title>
 </head>
 <body>
-	<!-- Image and text -->
-	<header class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar bg-dark">
-		<a class="navbar-brand  mr-0 mr-md-2 text-white" aria-label="Extrack"> 
-		</a>
-		
-		<div class="navbar-nav-scroll">
-			<ul class="navbar-nav bd-navbar-nav flex-row">
-				<li class="nav-item active"><a class="nav-link" href="#">Dashboard <span class="sr-only">(current)</span></a></li>
-				<li class="nav-item"><a class="nav-link" href="#">Data</a></li>
-				<li class="nav-item dropdown">
-					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" 
-						data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
-					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-						<a class="dropdown-item" href="#">Setting 1</a> 
-						<a class="dropdown-item" href="#">Setting 2</a> 
-						<a class="dropdown-item" href="#">Setting 3</a>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</header>
+	<th:block th:replace="fragment/navbar :: navbar" />
 
 	<div class="container-fluid">
-		<div class="row m-0 mt-4">
-			<div class="col-12">
-				<img th:src="@{/img/under-construction.png}" class="img-fluid mx-auto d-block" alt="Under construction">
+		<div class="row m-0 justify-content-sm-center">
+			<div class="col-lg-3 col-md-4 col-sm-7 mt-4">
+				<a class="card-button" href="#">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">Dashboard</h5>
+							<p class="card-text text-primary"><i class="fas fa-chart-bar fa-7x"></i></p>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-lg-3 col-md-4 col-sm-7 mt-4">
+				<a class="card-button" href="#">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">Betalingen</h5>
+							<p class="card-text text-primary"><i class="fas fa-money-bill fa-7x"></i></p>
+						</div>
+					</div>
+				</a>
+			</div>
+			<div class="col-lg-3 col-md-4 col-sm-7 mt-4">
+				<a class="card-button" th:href="@{expenses/import}">
+					<div class="card text-center">
+						<div class="card-body">
+							<h5 class="card-title">Importeren</h5>
+							<p class="card-text text-primary"><i class="fas fa-upload fa-7x"></i></p>
+						</div>
+					</div>
+				</a>
 			</div>
 		</div>
 	</div>

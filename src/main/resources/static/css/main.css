@@ -10,3 +10,24 @@ body,html {
 {
 	border: none;
 }
+
+.card-button
+{
+	color: inherit;
+	text-decoration: none;
+}
+.card-button:hover
+{
+	color: inherit;
+	text-decoration: none;
+}
+.card-button:hover .card
+{
+	box-shadow: 4px 3px 8px 1px #969696;
+	-webkit-box-shadow: 4px 3px 8px 1px #969696;
+}
+.card-button:visited
+{
+	color: inherit;
+	text-decoration: none;
+}
