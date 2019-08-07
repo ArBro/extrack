@@ -22,7 +22,7 @@ public class ExpenseFileStorageService implements StorageService
 {
 	private final Path rootLocation;
 
-	public ExpenseFileStorageService(@Value("${storage.upload.dir") String uploadDir)
+	public ExpenseFileStorageService(@Value("${storage.upload.dir}") String uploadDir)
 	{
 		this.rootLocation = Paths.get(uploadDir);
 	}

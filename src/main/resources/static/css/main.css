@@ -2,6 +2,10 @@ body,html {
   height: 100%;
 }
 
+#importFile .modal-dialog {
+	max-width: 700px;
+}
+
 .nav-item.active
 {
 	font-weight: bold;

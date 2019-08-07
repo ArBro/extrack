@@ -1,27 +1,61 @@
 package nl.abrouwer.extrack.domain.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "USER")
 public class User implements Serializable
 {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 6634276093814759411L;
 
 	@Id
-	@Column(name = "USR_ID_CODE")
+	@Column(name = "USR_USER_NO")
 	private long id;
 
-	@Column(name = "USR_NAME_DESC")
+	@Column(name = "USR_NAME_DESC", unique = true)
 	private String username;
 
 	@Column(name = "USR_PASSWORD_CODE")
 	private String password;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<TransactionImport> transactionImports;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Account> accounts;
+
+	@Column(name = "USR_CREATE_DATE")
+	private LocalDateTime createDate;
+
+	@Column(name = "USR_UPDATE_DATE")
+	private LocalDateTime updateDate;
+
+
+	@PrePersist
+	public void onCreate()
+	{
+		this.createDate = LocalDateTime.now();
+		onUpdate();
+	}
+
+
+	@PreUpdate
+	public void onUpdate()
+	{
+		this.updateDate = LocalDateTime.now();
+	}
 
 
 	public long getId()
@@ -30,9 +64,15 @@ public class User implements Serializable
 	}
 
 
-	public void setId(long id)
+	public String getUsername()
 	{
-		this.id = id;
+		return username;
+	}
+
+
+	public void setUsername(String username)
+	{
+		this.username = username;
 	}
 
 
@@ -48,15 +88,35 @@ public class User implements Serializable
 	}
 
 
-	public String getUsername()
+	public List<TransactionImport> getTransactionImports()
 	{
-		return username;
+		if (this.transactionImports == null)
+		{
+			return new ArrayList<>();
+		}
+		return transactionImports;
 	}
 
 
-	public void setUsername(String username)
+	public List<Account> getAccounts()
 	{
-		this.username = username;
+		if (this.accounts == null)
+		{
+			return new ArrayList<>();
+		}
+		return accounts;
+	}
+
+
+	public LocalDateTime getCreateDate()
+	{
+		return createDate;
+	}
+
+
+	public LocalDateTime getUpdateDate()
+	{
+		return updateDate;
 	}
 
 }

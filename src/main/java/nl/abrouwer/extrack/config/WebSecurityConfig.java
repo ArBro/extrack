@@ -23,7 +23,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
 		// @formatter:off
 		web.ignoring()
 			.antMatchers("/favicon.ico")
-			.antMatchers("/images/**")
+			.antMatchers("/img/**")
 			.antMatchers("/css/**")
 			.antMatchers("/js/**")
 			.antMatchers("/webjars/**")
