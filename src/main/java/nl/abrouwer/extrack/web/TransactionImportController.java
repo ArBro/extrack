@@ -41,27 +41,21 @@ public class TransactionImportController extends BaseController
 		return "transactions/import";
 	}
 
-	//
-	// @GetMapping("/files/{filename:.+}")
-	// @ResponseBody
-	// public ResponseEntity<Resource> serveFile(@PathVariable String filename)
-	// {
-	//
-	// Resource file = storageService.loadAsResource(filename);
-	// return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-	// "attachment; filename=\"" + file.getFilename() + "\"").body(file);
-	// }
-
 
 	@PostMapping("/transactions/import")
 	public String handleFileUpload(@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes)
 	{
-
-		// storageService.store(file);
-		transactionImportService.importTransactions(file);
-		redirectAttributes.addFlashAttribute("message",
-				"You successfully uploaded " + file.getOriginalFilename() + "!");
+		try
+		{
+			transactionImportService.importTransactions(file);
+			redirectAttributes.addFlashAttribute("message", "You successfully uploaded " + file.getOriginalFilename() + "!");
+		}
+		catch (Exception e)
+		{
+			log.error("Error occurred while uploading {} with error {}", file.getOriginalFilename(), e, e);
+			redirectAttributes.addFlashAttribute("error", "Error while uploading " + file.getOriginalFilename() + "!");
+		}
 
 		return "redirect:/transactions/import";
 	}

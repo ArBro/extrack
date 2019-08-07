@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,6 +28,7 @@ public class TransactionImport implements Serializable
 	private static final long serialVersionUID = 2559170699605229037L;
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "IMP_IMPORT_NO")
 	private long id;
 
@@ -44,7 +47,7 @@ public class TransactionImport implements Serializable
 	private ImportStatus status;
 
 	@OneToMany(mappedBy = "transactionImport", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Transaction> transactions;
+	private List<Transaction> transactions = new ArrayList<>();
 
 	@Column(name = "IMP_IMPORTED_DATE")
 	private LocalDateTime importDate;
@@ -124,11 +127,6 @@ public class TransactionImport implements Serializable
 
 	public List<Transaction> getTransactions()
 	{
-		if (this.transactions == null)
-		{
-			return new ArrayList<>();
-		}
-
 		return transactions;
 	}
 

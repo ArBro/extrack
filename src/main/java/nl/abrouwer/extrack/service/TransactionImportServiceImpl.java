@@ -31,7 +31,6 @@ import nl.abrouwer.extrack.domain.model.TransactionImport;
 import nl.abrouwer.extrack.domain.model.TransactionSource;
 import nl.abrouwer.extrack.domain.model.User;
 import nl.abrouwer.extrack.domain.repo.TransactionImportRepository;
-import nl.abrouwer.extrack.domain.repo.TransactionRepository;
 import nl.abrouwer.extrack.exception.ExpenseFileStorageException;
 
 @Service
@@ -42,18 +41,15 @@ public class TransactionImportServiceImpl implements TransactionImportService
 
 	private final TransactionImportRepository transactionImportRepository;
 
-	private final TransactionRepository transactionRepository;
-
 	private final AccountService accountService;
 
 	private final UserService userService;
 
 
-	public TransactionImportServiceImpl(TransactionImportRepository transactionImportRepository, TransactionRepository transactionRepository,
+	public TransactionImportServiceImpl(TransactionImportRepository transactionImportRepository,
 			AccountService accountService, UserService userService)
 	{
 		this.transactionImportRepository = transactionImportRepository;
-		this.transactionRepository = transactionRepository;
 		this.accountService = accountService;
 		this.userService = userService;
 	}
@@ -103,10 +99,67 @@ public class TransactionImportServiceImpl implements TransactionImportService
 			transactionImport.setHash(hash);
 			transactionImport.setStatus(ImportStatus.WAITING);
 
-			transactionImport = transactionImportRepository.save(transactionImport);
-
 			File importFile = convertToFile(file);
-			processImport(transactionImport, importFile);
+
+			transactionImport.setStatus(ImportStatus.IN_PROGRESS);
+
+			int skipLines = 1;
+
+			try (CSVReader reader = new CSVReader(new FileReader(importFile), ',', '"'))
+			{
+				for (int i = 0; i < skipLines; i++)
+				{
+					reader.readNext();
+				}
+
+				String[] transactionLine;
+				while ((transactionLine = reader.readNext()) != null)
+				{
+					Transaction transaction = new Transaction();
+
+					Account account = accountService.findByUserAndIban(transactionImport.getUser(), transactionLine[0]);
+
+					if (account == null)
+					{
+						throw new ExpenseFileStorageException("IBAN is not known, please create a new account first for iban " + transactionLine[0]);
+					}
+
+					Currency currency = account.getCurrency();
+					DecimalFormatSymbols currencySymbols = new DecimalFormatSymbols();
+					currencySymbols.setCurrency(currency);
+					currencySymbols.setDecimalSeparator(',');
+
+					DecimalFormat currencyFormat = new DecimalFormat();
+					currencyFormat.setDecimalFormatSymbols(currencySymbols);
+					currencyFormat.setNegativePrefix("-");
+					currencyFormat.setPositivePrefix("+");
+					currencyFormat.setParseBigDecimal(true);
+
+					transaction.setAccount(account);
+					transaction.setMutationDate(LocalDate.parse(transactionLine[4]));
+					transaction.setInterestDate(LocalDate.parse(transactionLine[5]));
+					transaction.setAmount((BigDecimal) currencyFormat.parse(transactionLine[6]));
+					transaction.setBalanceAfterTransaction((BigDecimal) currencyFormat.parse(transactionLine[7]));
+					transaction.setCounterPartyIban(transactionLine[8]);
+					transaction.setCounterPartyName(transactionLine[9]);
+					transaction.setCounterPartyBic(transactionLine[12]);
+					transaction.setType(transactionLine[13]);
+					transaction.setDescription(transactionLine[19]);
+					transaction.setSource(TransactionSource.IMPORT);
+					transaction.setTransactionImport(transactionImport);
+
+					transactionImport.getTransactions().add(transaction);
+				}
+
+				transactionImport.setStatus(ImportStatus.FINISHED);
+			}
+			catch (Exception e)
+			{
+				transactionImport.setStatus(ImportStatus.ERROR);
+				throw e;
+			}
+
+			transactionImportRepository.save(transactionImport);
 		}
 		catch (Exception e)
 		{
@@ -115,69 +168,6 @@ public class TransactionImportServiceImpl implements TransactionImportService
 				transactionImport.setStatus(ImportStatus.ERROR);
 			}
 			throw new ExpenseFileStorageException("Failed to import file " + file.getOriginalFilename(), e);
-		}
-	}
-
-
-	private void processImport(TransactionImport transactionImport, File importFile) throws Exception
-	{
-		transactionImport.setStatus(ImportStatus.IN_PROGRESS);
-
-		int skipLines = 1;
-		
-		try (CSVReader reader = new CSVReader(new FileReader(importFile), ',', '"'))
-		{
-			for (int i = 0; i < skipLines; i++)
-			{
-				reader.readNext();
-			}
-
-			String[] transactionLine;
-			while ((transactionLine = reader.readNext()) != null)
-			{
-				Transaction transaction = new Transaction();
-				
-				log.debug("Looking up account for user {} and iban {}", transactionImport.getUser().getUsername(), transactionLine[0]);
-				Account account = accountService.findByUserAndIban(transactionImport.getUser(), transactionLine[0]);
-
-				if (account == null)
-				{
-					throw new ExpenseFileStorageException("IBAN is not known, please create a new account first for iban " + transactionLine[0]);
-				}
-
-				Currency currency = account.getCurrency();
-				DecimalFormatSymbols currencySymbols = new DecimalFormatSymbols();
-				currencySymbols.setCurrency(currency);
-				currencySymbols.setDecimalSeparator(',');
-
-				DecimalFormat currencyFormat = new DecimalFormat();
-				currencyFormat.setDecimalFormatSymbols(currencySymbols);
-				currencyFormat.setNegativePrefix("-");
-				currencyFormat.setPositivePrefix("+");
-				currencyFormat.setParseBigDecimal(true);
-
-				transaction.setAccount(account);
-				transaction.setMutationDate(LocalDate.parse(transactionLine[4]));
-				transaction.setInterestDate(LocalDate.parse(transactionLine[5]));
-				transaction.setAmount((BigDecimal) currencyFormat.parse(transactionLine[6]));
-				transaction.setBalanceAfterTransaction((BigDecimal) currencyFormat.parse(transactionLine[7]));
-				transaction.setCounterPartyIban(transactionLine[8]);
-				transaction.setCounterPartyName(transactionLine[9]);
-				transaction.setCounterPartyBic(transactionLine[12]);
-				transaction.setType(transactionLine[13]);
-				transaction.setDescription(transactionLine[19]);
-				transaction.setSource(TransactionSource.IMPORT);
-				transaction.setTransactionImport(transactionImport);
-				
-				transactionRepository.save(transaction);
-			}
-
-			transactionImport.setStatus(ImportStatus.FINISHED);
-		}
-		catch (Exception e)
-		{
-			transactionImport.setStatus(ImportStatus.ERROR);
-			throw e;
 		}
 	}
 
