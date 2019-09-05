@@ -28,7 +28,7 @@ public class Transaction implements Serializable
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "TRA_TRANSACTION_NO")
-	private Long id;
+	private long id;
 
 	@ManyToOne(fetch = FetchType.LAZY, optional = false)
 	@JoinColumn(name = "TRA_ACCOUNT_NO")
@@ -99,6 +99,7 @@ public class Transaction implements Serializable
 	{
 		return id;
 	}
+
 
 	public Account getAccount()
 	{

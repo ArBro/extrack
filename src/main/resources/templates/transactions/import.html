@@ -22,6 +22,7 @@
 						<tr>
 							<th>#</th>
 							<th>Bestandsnaam</th>
+							<th>Betaalregels</th>
 							<th>Geimporteerd op</th>
 							<th>Status</th>
 						</tr>
@@ -30,6 +31,7 @@
 						<tr th:each="import : ${imports}">
 							<td th:text="${import.id}">id</td>
 							<td><a th:href="${import.file}" th:text="${import.file}">filename</a></td>
+							<td th:text="${import.transactions.size()}">count</td>
 							<td th:text="${import.importDate}">importDate</td>
 							<td th:text="${import.status}">status</td>
 						</tr>
