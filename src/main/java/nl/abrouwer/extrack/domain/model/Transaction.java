@@ -2,14 +2,17 @@ package nl.abrouwer.extrack.domain.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Currency;
+import java.util.Locale;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,7 +33,7 @@ public class Transaction implements Serializable
 	@Column(name = "TRA_TRANSACTION_NO")
 	private long id;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = false)
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "TRA_ACCOUNT_NO")
 	private Account account;
 
@@ -42,6 +45,9 @@ public class Transaction implements Serializable
 
 	@Column(name = "TRA_AMOUNT_DEC", scale = 2)
 	private BigDecimal amount;
+	
+	@Column(name = "TRA_CURRENCY_CODE", scale = 2)
+	private Currency currency;
 
 	@Column(name = "TRA_BALANCE_AFTER_DEC", scale = 2)
 	private BigDecimal balanceAfterTransaction;
@@ -65,12 +71,12 @@ public class Transaction implements Serializable
 	@Column(name = "TRA_SOURCE_CODE", length = 10)
 	private TransactionSource source;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
+	@ManyToOne(optional = true)
 	@JoinColumn(name = "TRA_IMPORT_CODE")
 	private TransactionImport transactionImport;
 
-	@ManyToOne(fetch = FetchType.LAZY, optional = true)
-	@JoinColumn(name = "TRA_CATEGORY_CODE")
+	@ManyToOne(optional = true)
+	@JoinColumn(name = "TRA_CATEGORY_ID")
 	private TransactionCategory category;
 
 	@Column(name = "TRA_CREATE_DATE")
@@ -140,6 +146,27 @@ public class Transaction implements Serializable
 	{
 		this.amount = amount;
 	}
+
+	public String getFormattedAmount()
+	{
+		DecimalFormat formatter = (DecimalFormat) DecimalFormat.getCurrencyInstance(new Locale("NL", "nl"));
+		DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance();
+		decimalFormatSymbols.setCurrency(currency);
+		formatter.setDecimalFormatSymbols(decimalFormatSymbols);
+
+		return formatter.format(amount.doubleValue());
+	}
+
+	public Currency getCurrency()
+	{
+		return currency;
+	}
+
+	public void setCurrency(Currency currency)
+	{
+		this.currency = currency;
+	}
+
 
 	public BigDecimal getBalanceAfterTransaction()
 	{
@@ -211,12 +238,10 @@ public class Transaction implements Serializable
 		this.source = source;
 	}
 
-
 	public TransactionImport getTransactionImport()
 	{
 		return transactionImport;
 	}
-
 
 	public void setTransactionImport(TransactionImport transactionImport)
 	{

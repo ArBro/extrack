@@ -139,6 +139,7 @@ public class TransactionImportServiceImpl implements TransactionImportService
 					transaction.setMutationDate(LocalDate.parse(transactionLine[4]));
 					transaction.setInterestDate(LocalDate.parse(transactionLine[5]));
 					transaction.setAmount((BigDecimal) currencyFormat.parse(transactionLine[6]));
+					transaction.setCurrency(Currency.getInstance(transactionLine[1]));
 					transaction.setBalanceAfterTransaction((BigDecimal) currencyFormat.parse(transactionLine[7]));
 					transaction.setCounterPartyIban(transactionLine[8]);
 					transaction.setCounterPartyName(transactionLine[9]);

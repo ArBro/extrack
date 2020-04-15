@@ -11,9 +11,11 @@
 		<div class="alert alert-danger mt-2" th:if="${error}" th:text="${error}"></div>
 		<div class="row mt-4">
 			<div class="col-9">
-				<h3>Overzicht betaalbestanden</h3>
+				<h4>Overzicht betaalbestanden</h4>
 			</div>
-			<button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#importFile">Voeg betaalbestand toe</button>
+			<div class="col-3">
+				<button type="button" class="btn btn-sm btn-primary float-right" data-toggle="modal" data-target="#importFile"><i class="fas fa-file-import mr-2"></i>Bestand toevoegen</button>
+			</div>
 		</div>
 		<div class="row mt-4">
 			<div class="col-12">
@@ -33,7 +35,7 @@
 							<td><a th:href="${import.file}" th:text="${import.file}">filename</a></td>
 							<td th:text="${import.transactions.size()}">count</td>
 							<td th:text="${import.importDate}">importDate</td>
-							<td th:text="${import.status}">status</td>
+							<td th:text="#{importStatus.__${import.status}__}">status</td>
 						</tr>
 					</tbody>
 				</table>
@@ -44,7 +46,7 @@
 	<div class="modal" id="importFile" tabindex="-1" role="dialog">
 		<div class="modal-dialog" role="document">
 			<div class="modal-content">
-				<form id="uploadFileForm" method="POST" enctype="multipart/form-data" th:action="@{/transactions/import}">
+				<form id="uploadFileForm" method="POST" enctype="multipart/form-data" th:action="@{/imports/add}">
 					<div class="modal-header">
 						<h5 class="modal-title">Importeer betaalbestand</h5>
 						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -52,14 +54,14 @@
 						</button>
 					</div>
 					<div class="modal-body">
-							<div class="custom-file">
-								<input type="file" name="file" class="custom-file-input" id="customFile">
-								<label class="custom-file-label" for="customFile" data-browse="Bestand kiezen">Voeg een betaalbestand toe</label>
-							</div>
+						<div class="custom-file">
+							<input type="file" name="file" class="custom-file-input form-control-sm" id="customFile">
+							<label class="custom-file-label form-label-sm" for="customFile" data-browse="Bestand kiezen">Voeg een betaalbestand toe</label>
+						</div>
 					</div>
 					<div class="modal-footer">
-						<input type="submit" class="btn btn-primary float-right" value="Importeren" />
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<input type="submit" class="btn btn-sm btn-primary float-right" value="Importeren" />
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Sluiten</button>
 					</div>
 				</form>
 			</div>

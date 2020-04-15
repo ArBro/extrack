@@ -1,0 +1,30 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block>
+	<div class="modal" id="addCategoryModal" tabindex="-1" role="dialog" th:fragment="addCategoryModal">
+		<div class="modal-dialog addCategoryModal" role="document">
+			<div class="modal-content">
+				<form id="addCategoryForm" method="POST" th:action="@{/settings/categories/add}" th:object="${CategoryCreateBean}">
+					<div class="modal-header">
+						<h5 class="modal-title">Post toevoegen</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn btn-sm btn-primary float-right" value="Toevoegen" />
+						<button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Sluiten</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script th:inline="javascript">
+		$(function() {
+			installAsyncModalForm('addCategory');
+		});
+	</script>
+</th:block>

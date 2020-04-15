@@ -1,5 +1,18 @@
-body,html {
-  height: 100%;
+body,html
+{
+	height: 100%;
+}
+
+th,td, td input, td select, label
+{
+	font-size: 80% !important;
+}
+
+th,td, td input
+{
+	vertical-align: middle !important;
+	padding-top: 0.25em !important;
+	padding-bottom: 0.25em !important;
 }
 
 #importFile .modal-dialog {

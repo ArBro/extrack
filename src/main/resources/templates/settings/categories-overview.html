@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragment/layout :: header" />
+<title>Extrack</title>
+</head>
+<body>
+	<th:block th:replace="fragment/navbar :: navbar" />
+	<div id="modalWrapper"></div>
+
+	<div class="container-fluid">
+		<div class="alert alert-success mt-2" th:if="${message}" th:text="${message}"></div>
+		<div class="alert alert-danger mt-2" th:if="${error}" th:text="${error}"></div>
+		<div class="row mt-4">
+			<div class="col-9">
+				<h4>Overzicht posten</h4>
+			</div>
+			<div class="col-3">
+				<button type="button" class="btn btn-sm btn-primary float-right" th:onclick="'openModal(\'\', \'' + @{/settings/categories/add} + '\', \'addCategoryModal\');'">
+					<i class="fas fa-file-import mr-2"></i>Post toevoegen
+				</button>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-12">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Id</th>
+							<th>Omschrijving</th>
+							<th>Type</th>
+							<th>Actief</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="category : ${categories}">
+							<td th:text="${category.categoryId}">IBAN</td>
+							<td th:text="${category.description}">Omschrijving</td>
+							<td th:text="#{transactionCategoryType.__${category.type}__}">Type</td>
+							<td th:text="${category.active ? 'Ja' : 'Nee'}">Actief</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

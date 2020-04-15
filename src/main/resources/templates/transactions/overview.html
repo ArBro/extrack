@@ -1,0 +1,72 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<th:block th:replace="fragment/layout :: header" />
+<title>Extrack</title>
+</head>
+<body>
+	<th:block th:replace="fragment/navbar :: navbar" />
+
+	<div class="container-fluid">
+		<div class="alert alert-success mt-2" th:if="${message}" th:text="${message}"></div>
+		<div class="alert alert-danger mt-2" th:if="${error}" th:text="${error}"></div>
+		<div class="row mt-4">
+			<div class="col-9">
+				<h3>Transacties</h3>
+			</div>
+		</div>
+		<div class="row mt-4">
+			<div class="col-12">
+				<form id="transactionsEditForm" th:action="@{/transactions/update}" th:object="${transactionsBean}" method="POST">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>Rekening</th>
+								<th>Datum</th>
+								<th>Begunstigde</th>
+								<th>Omschrijving</th>
+								<th>Bedrag</th>
+								<th>Post</th>
+								<th>Bron</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="transaction, stat : *{transactions}">
+								<input type="hidden" th:field="*{transactions[__${stat.index}__].id}" />
+								<td th:text="${transaction.account.description != null ? transaction.account.description : transaction.account.iban}">Rekening</td>
+								<td th:text="${transaction.mutationDate}">Datum</td>
+								<td th:text="${transaction.counterPartyName}">Begunstigde</td>
+								<td style="min-width: 500px;">
+									<div style="display: flex">
+										<input type="text" class="form-control form-control-sm" disabled="disabled" th:field="*{transactions[__${stat.index}__].description}" />
+										<a href="#!" th:id="${'editTransaction'+ stat.index}" class="btn btn-sm btn-link py-0">Bewerken</a>
+									</div>
+								</td>
+								<td th:text="${transaction.getFormattedAmount()}">Bedrag</td>
+								<td style="min-width: 200px;">
+									<select class="form-control form-control-sm" th:field="*{transactions[__${stat.index}__].category}">
+										<option th:value="${null}">Geen post geselecteerd</option>
+										<option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryId + ' - ' + category.description}"></option>
+									</select>
+								</td>
+								<td th:text="#{transactionSource.__${transaction.source}__}">Bron</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<script th:inline="javascript">
+					$(function() {
+						$('#transactionsEditForm')
+							.on('click', 'a[id^="editTransaction"]', function(e){
+								var field = $($(this).closest('tr')).find('input[name$="description"]');
+								field.prop('disabled', !field.prop('disabled'));
+							});
+					});
+					</script>
+					
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

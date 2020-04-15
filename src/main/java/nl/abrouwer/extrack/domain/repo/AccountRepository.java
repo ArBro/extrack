@@ -11,10 +11,11 @@ import nl.abrouwer.extrack.domain.model.User;
 
 public interface AccountRepository extends JpaRepository<Account, Long>
 {
-	public Account findByUserAndIban(User user, String iban);
+	public List<Account> findByUser(User user);
 
-	public List<Account> findAccountsByUser(User user);
+	public Account findByUserAndIban(User user, String iban);
 
 	@Query(value = "select acc.id from Account acc where acc.user= user.id")
 	List<Long> findAccountIdAloneByUser(@Param("user") User user);
+
 }

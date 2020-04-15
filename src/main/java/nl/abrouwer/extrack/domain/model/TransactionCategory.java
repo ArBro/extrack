@@ -2,10 +2,7 @@ package nl.abrouwer.extrack.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,7 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -28,8 +26,15 @@ public class TransactionCategory implements Serializable
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "TRC_CATEGORY_NO")
+	@Column(name = "TRC_ID_NO")
 	private Long id;
+
+	@ManyToOne(optional = false)
+	@JoinColumn(name = "TRC_USER_NO")
+	private User user;
+
+	@Column(name = "TRC_CATEGORY_NO")
+	private Long categoryId;
 
 	@Column(name = "TRC_DESCRIPTION_DESC")
 	private String description;
@@ -37,9 +42,6 @@ public class TransactionCategory implements Serializable
 	@Enumerated(EnumType.STRING)
 	@Column(name = "TRC_TYPE_CODE", length = 10)
 	private TransactionCategoryType type;
-
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-	private List<Transaction> transactions;
 
 	@Type(type = "true_false")
 	@Column(name = "TRC_ACTIVE_BOOL", columnDefinition = "char", length = 1)
@@ -70,6 +72,30 @@ public class TransactionCategory implements Serializable
 	public Long getId()
 	{
 		return id;
+	}
+
+
+	public User getUser()
+	{
+		return user;
+	}
+
+
+	public void setUser(User user)
+	{
+		this.user = user;
+	}
+
+
+	public Long getCategoryId()
+	{
+		return categoryId;
+	}
+
+
+	public void setCategoryId(Long categoryId)
+	{
+		this.categoryId = categoryId;
 	}
 
 
@@ -107,18 +133,6 @@ public class TransactionCategory implements Serializable
 	{
 		this.active = active;
 	}
-
-
-	public List<Transaction> getTransactions()
-	{
-		if (this.transactions == null)
-		{
-			return new ArrayList<>();
-		}
-
-		return transactions;
-	}
-
 
 	public LocalDateTime getCreateDate()
 	{

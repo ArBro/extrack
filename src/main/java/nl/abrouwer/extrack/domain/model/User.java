@@ -34,10 +34,10 @@ public class User implements Serializable
 	private String password;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<TransactionImport> transactionImports;
+	private List<TransactionImport> transactionImports = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<Account> accounts;
+	private List<Account> accounts = new ArrayList<>();
 
 	@Column(name = "USR_CREATE_DATE")
 	private LocalDateTime createDate;
@@ -93,20 +93,12 @@ public class User implements Serializable
 
 	public List<TransactionImport> getTransactionImports()
 	{
-		if (this.transactionImports == null)
-		{
-			return new ArrayList<>();
-		}
 		return transactionImports;
 	}
 
 
 	public List<Account> getAccounts()
 	{
-		if (this.accounts == null)
-		{
-			return new ArrayList<>();
-		}
 		return accounts;
 	}
 

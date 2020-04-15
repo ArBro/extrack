@@ -2,9 +2,7 @@ package nl.abrouwer.extrack.domain.model;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Currency;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -34,10 +31,7 @@ public class Account implements Serializable
 	@JoinColumn(name = "ACC_USER_NO")
 	private User user;
 
-	@OneToMany(mappedBy = "account", fetch = FetchType.LAZY)
-	private List<Transaction> transactions;
-
-	@Column(name = "ACC_IBAN_CODE", length = 30)
+	@Column(name = "ACC_IBAN_CODE", length = 30, nullable = false)
 	private String iban;
 
 	@Column(name = "ACC_DESCRIPTION_DESC")
@@ -134,17 +128,6 @@ public class Account implements Serializable
 	public void setCurrency(Currency currency)
 	{
 		this.currency = currency;
-	}
-
-
-	public List<Transaction> getTransactions()
-	{
-		if (this.transactions == null)
-		{
-			return new ArrayList<>();
-		}
-
-		return transactions;
 	}
 
 
